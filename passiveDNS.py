@@ -13,7 +13,6 @@ Created on Tue Jul 12 10:48:19 2016
 import sys
 import httplib, json, requests
 
-#TODO: read api key from .config file
 #TODO: read domain/ips from .config file 
 #TODO: add file output option
 
@@ -49,31 +48,53 @@ def vtDomain(addr):
         print('[-Errno {0}] {1}'.format(e.errno, e.strerror))
 
 def format_vtIP(out_vt):
-    print 'Historic Passive DNS resolutions [last_resolved] [hostname]'
-    for resolution in sorted(out_vt['resolutions'], key = lambda key:key['last_resolved'], reverse = True):
-        print resolution['last_resolved'].split()[0], resolution['hostname']
-    print 
-    print 'Detected URLs [scan_date] [url]'
-    for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
-        print url['scan_date'], url['url']
+    try:
+        print 'Historic Passive DNS resolutions [last_resolved] [hostname]'
+        for resolution in sorted(out_vt['resolutions'], key = lambda key:key['last_resolved'], reverse = True):
+            print resolution['last_resolved'].split()[0], resolution['hostname']
+        print 
+    except KeyError:
+        print 'Passive DNS data is not available'
+        print
+
+    try:    
+        print 'Detected URLs [scan_date] [url]'
+        for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
+            print url['scan_date'], url['url']
+    except KeyError:
+        print 'Detected URLs data is not available'
+        print
     return
 
 def format_vtDomain(out_vt):
     print out_vt['whois']
     print 
     print 'Web Reputation domain info:'
-    print 'Verdict: ' + out_vt['Webutation domain info']['Verdict']
-    print 'Adult Content: ' + out_vt['Webutation domain info']['Adult content']
-    print 'Safety score: ' + str(out_vt['Webutation domain info']['Safety score'])
-    print 
-    print 'Historic Passive DNS resolutions [last_resolved] [hostname]'
-    for resolution in sorted(out_vt['resolutions'], key = lambda key:key['last_resolved'], reverse = True):
-        print resolution['last_resolved'].split()[0], resolution['ip_address']
-    print 
-    print 'Detected URLs [scan_date] [url]'
-    for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
-        print url['scan_date'], url['url']
-    return
+    try:
+        print 'Verdict: ' + out_vt['Webutation domain info']['Verdict']
+        print 'Adult Content: ' + out_vt['Webutation domain info']['Adult content']
+        print 'Safety score: ' + str(out_vt['Webutation domain info']['Safety score'])
+        print 
+    except KeyError:
+        print "Reputation data is not available"
+        print
+
+    try:
+        print 'Historic Passive DNS resolutions [last_resolved] [hostname]'
+        for resolution in sorted(out_vt['resolutions'], key = lambda key:key['last_resolved'], reverse = True):
+            print resolution['last_resolved'].split()[0], resolution['ip_address']
+        print 
+    except KeyError:
+        print 'Passive DNS data is not available'
+        print
+
+    try:
+        print 'Detected URLs [scan_date] [url]'
+        for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
+            print url['scan_date'], url['url']
+    except KeyError:
+        print 'Detected URLs data is not available'
+        print
 
 def main():
     if not sys.argv[1:]:
