@@ -98,16 +98,25 @@ def format_vtDomain(out_vt):
 
 def main():
     if not sys.argv[1:]:
-        print 'usage: .geoIP.py [--ip] [--domain] <ip_address>/<domain>'
+        print 'usage: .passiveDNS.py [--ip] [--domain] <ip_address>/<domain>'
         sys.exit(1)
     if sys.argv[1] =='--ip': 
         ip_address = sys.argv[2]
         out_vt = vtIP(ip_address)
-        format_vtIP(out_vt)
+        # check if ip was found before calling the method
+        if out_vt['verbose_msg']=='IP address in dataset':
+            format_vtIP(out_vt)
+        else: 
+            print '[-]Error: ' + out_vt['verbose_msg']       
     elif sys.argv[1] == '--domain':
         domain = sys.argv[2]
         out_vt = vtDomain(domain)
-        format_vtDomain(out_vt)
+
+        # check if domain was found before calling the method
+        if out_vt['verbose_msg']=='Domain found in dataset':
+            format_vtDomain(out_vt)
+        else:
+            print '[-]Error: ' + out_vt['verbose_msg']
        
     
 if __name__ == '__main__':
