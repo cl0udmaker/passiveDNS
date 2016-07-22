@@ -68,8 +68,18 @@ def format_vtIP(out_vt):
     return
 
 def format_vtDomain(out_vt):
-    print out_vt['whois']
+    if out_vt['whois']:
+        print out_vt['whois']
+    else:
+        print 'Whois data is not available'
     print 
+    # Optional info
+    if out_vt.get('Opera domain info'):
+        print 'Opera domain info: ' + out_vt['Opera domain info']
+    if out_vt.get('BitDefender domain info'):
+        print 'BitDefender domain info: ' + out_vt['BitDefender domain info']
+        print
+        
     print 'Web Reputation domain info:'
     try:
         print 'Verdict: ' + out_vt['Webutation domain info']['Verdict']
