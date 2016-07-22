@@ -57,10 +57,11 @@ def format_vtIP(out_vt):
         print 'Passive DNS data is not available'
         print
 
-    try:    
-        print 'Detected URLs [scan_date] [url]'
-        for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
-            print url['scan_date'], url['url']
+    try: 
+        if out_vt['detected_url']:   
+            print 'Detected URLs [scan_date] [url]'
+            for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
+                print url['scan_date'], url['url']
     except KeyError:
         print 'Detected URLs data is not available'
         print
@@ -89,9 +90,10 @@ def format_vtDomain(out_vt):
         print
 
     try:
-        print 'Detected URLs [scan_date] [url]'
-        for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
-            print url['scan_date'], url['url']
+        if out_vt['detected_urls']:
+            print 'Detected URLs [scan_date] [url]'
+            for url in sorted(out_vt['detected_urls'], key = lambda key:key['scan_date'], reverse = True):
+                print url['scan_date'], url['url']
     except KeyError:
         print 'Detected URLs data is not available'
         print
@@ -107,7 +109,7 @@ def main():
         if out_vt['verbose_msg']=='IP address in dataset':
             format_vtIP(out_vt)
         else: 
-            print '[-]Error: ' + out_vt['verbose_msg']       
+            print '[-]Error: ' + out_vt['verbose_msg']      
     elif sys.argv[1] == '--domain':
         domain = sys.argv[2]
         out_vt = vtDomain(domain)
@@ -116,7 +118,7 @@ def main():
         if out_vt['verbose_msg']=='Domain found in dataset':
             format_vtDomain(out_vt)
         else:
-            print '[-]Error: ' + out_vt['verbose_msg']
+            print '[-]Error: ' + out_vt['verbose_msg'] + domain
        
     
 if __name__ == '__main__':
