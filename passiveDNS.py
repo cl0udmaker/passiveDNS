@@ -13,9 +13,23 @@ Created on Tue Jul 12 10:48:19 2016
 import sys
 import httplib, json, requests
 
+#TODO: read api key from .config file
+#TODO: read domain/ips from .config file 
+#TODO: add file output option
+
+# read api keys and work to parse
+def init():
+    api_file = open('passiveDNS.config', 'r')
+    config = {}
+    config['api'] = api_file.readline()
+    api_file.close()
+    return config
+# read work in forms domains from the file
+
 def vtIP(ip):
     try: 
-        params = {'ip': ip, 'apikey': '3b56547d780fd9112d729d4d20081d259d4fd7c00cdb9edba9024241ba5bb05c' }
+        config = init()
+        params = {'ip': ip, 'apikey': config['api'] }
         url = 'https://www.virustotal.com/vtapi/v2/ip-address/report'
         response = requests.get(url, params = params)
         response_json = response.json()
@@ -25,7 +39,8 @@ def vtIP(ip):
 
 def vtDomain(addr):
     try: 
-        params = {'domain': addr, 'apikey': '3b56547d780fd9112d729d4d20081d259d4fd7c00cdb9edba9024241ba5bb05c'}
+        config = init()
+        params = {'domain': addr, 'apikey': config['api']}
         url = 'https://www.virustotal.com/vtapi/v2/domain/report'
         response = requests.get(url, params=params)
         response_json = response.json()
